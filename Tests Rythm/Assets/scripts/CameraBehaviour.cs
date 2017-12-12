@@ -1,12 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraBehaviour : MonoBehaviour
 {
     public Transform target;
     public float speed;
     public Transform cam1;
+
+	void Update()
+	{
+		if (Input.GetKey (KeyCode.R) == true || Input.GetKey(KeyCode.JoystickButton5))
+			{
+				SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
+			}
+	}
 
     void FixedUpdate()
     {

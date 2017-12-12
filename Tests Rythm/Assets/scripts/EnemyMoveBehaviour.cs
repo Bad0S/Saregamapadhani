@@ -10,11 +10,13 @@ public class EnemyMoveBehaviour : MonoBehaviour {
 	Vector3 enemyDirection;
 	private float angle;
 	public float moveSpeed;
+	public static bool detectionMain = false;
+
 	// Use this for initialization
 	void Start () {
-		
+
 	}
-	
+		
 	// Update is called once per frame
 	void Update () {
 		if (detected == true){
@@ -31,14 +33,6 @@ public class EnemyMoveBehaviour : MonoBehaviour {
 			transform.rotation = Quaternion.Euler(0, 0, angle);
 			float step = moveSpeed * Time.deltaTime;
 			transform.position = Vector3.MoveTowards(transform.position, Target.transform.position, step);
-			//enemyDirection.Normalize ();
-			//float step = moveSpeed * Time.deltaTime;
-			//transform.position = Vector3.MoveTowards(transform.position, enemyDirection, step);
-			//transform.position = new Vector3 (xEnemyDirection*moveSpeed/100,yEnemyDirection *moveSpeed/100, 0);
-			//transform.Translate (Vector3.left* Time.deltaTime*moveSpeed);
-			Debug.Log (angle); 
-			//print (enemyDirection);
-
 		}
 	}
 }

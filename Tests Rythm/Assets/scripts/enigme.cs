@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
 using UnityEngine.Experimental.UIElements;
-using NUnit.Framework.Internal;
 using UnityEngine.Networking;
 using System;
 using UnityEngine.EventSystems;
@@ -31,8 +30,6 @@ public class enigme : MonoBehaviour {
 		enigmaRenderer = GetComponent<SpriteRenderer> ();
 		// GetComponent<SpriteRenderer>().color = new Color(1,0,0) change la couleur du sprite, ici en rouge
 		parameters = new int[button.Length + timeStarting.Length + timeFrame.Length];
-		print (parameters.Length);
-
 		for (int i = 0; i < parameters.Length; i++) {
 			if (switcher == 2) {
 				parameters [i] = timeFrame [Mathf.FloorToInt (i / 3)];
@@ -58,9 +55,7 @@ public class enigme : MonoBehaviour {
 	{
 		if(Input.GetButtonDown ("1")== true || Input.GetButtonDown ("2")== true ||Input.GetButtonDown ("3")== true || checker==true ){
 			checker = true;
-			//for (int i = 0; i <= (parameters.Length -1); i+=3) {
 			enigmaRenderer.color = Color.gray;
-			//print (parameters [count]);
 				//placeholder
 			if (parameters[count] ==1 && (parameters[count+1]/100) < timerFrames && timerFrames< ((parameters[count+1] + parameters[count+2])/100))
 				{
@@ -88,7 +83,6 @@ public class enigme : MonoBehaviour {
 				else{
 					kill = true;
 				}
-				print (count);
 			}
 			else if (timerFrames > ((parameters[count+1] + parameters[count+2])/100) ){
 				checker = false;
@@ -111,13 +105,11 @@ public class enigme : MonoBehaviour {
 		}
 		if (checker == true){
 			timerFrames += Time.deltaTime;
-			//print (timerFrames);
 		}
 		else{
 			enigmaRenderer.color = Color.white;
 		}
 		if (kill == true) {
-			print ("enigme resolue");
 			block.kill = true;
 			Destroy (gameObject);
 		}

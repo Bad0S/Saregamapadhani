@@ -138,8 +138,11 @@ public class Player : MonoBehaviour {
         }
 		if (other.name == "EnigmaRoom")
 			enigme.entered = true;
-		if (other.name == "EnemyMainRoom")
+		else if (other.name == "EnemyMainRoom")
 			EnemyMoveBehaviour.detected = true;
+		else if(other.name == "EnemyAnnexRoom")
+			EnemyMoveBehaviourAnnex.detectedAnnex = true;
+		
     }
     IEnumerator DisableObject(GameObject obj, float time)
 	{

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NUnit.Framework.Constraints;
 
 public class health : MonoBehaviour {
 	public GameObject healItem;
@@ -21,7 +20,6 @@ public class health : MonoBehaviour {
 	public void Heal( float lifeToGain)// la fonction pour soigner
 	{
 		life += lifeToGain;
-		print (life); 
 	}
 
 	public void Hurt( float lifeToLose)

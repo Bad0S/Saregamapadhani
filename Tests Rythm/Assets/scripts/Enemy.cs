@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour {
 		
 	}
 
-    void OnTriggerEnter2D (Collider2D other)
+    void OnTriggerStay2D (Collider2D other)
 	{
 		if (other.tag == "Player" && player.isDashing == false ) 
 		{
