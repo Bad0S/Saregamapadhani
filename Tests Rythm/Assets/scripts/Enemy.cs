@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour {
 
     void OnTriggerStay2D (Collider2D other)
 	{
-		if (other.tag == "Player" && player.isDashing == false ) 
+		if (other.tag == "Player" && player.isDashing == false && AttackPattern.offensive == true ) 
 		{
 			other.GetComponent <health>().Hurt(damage);
 		}

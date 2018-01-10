@@ -14,9 +14,14 @@ public class EnemyMoveBehaviour : MonoBehaviour {
 	private float angle;
 	public float moveSpeed;
 	public static bool detectionMain = false;
+	private Rigidbody2D body;
+	private Vector3 droitDevant;
+
 
 	// Use this for initialization
 	void Start () {
+		body = GetComponent<Rigidbody2D>() ;
+		droitDevant = new Vector3 (0, 1,0);
 	}
 	//est appelée par RoomDétection, lui donne sa cible etl droit de la suivre
 	public void Detection(GameObject Player){
@@ -30,6 +35,7 @@ public class EnemyMoveBehaviour : MonoBehaviour {
 			Vector3 enemyDirection = Target.transform.InverseTransformPoint (transform.position);
 			xEnemyDirection = enemyDirection.x;
 			yEnemyDirection = enemyDirection.y;
+			Vector3 direction = (enemyDirection - transform.position).normalized;
 			if (xEnemyDirection != 0.0f || yEnemyDirection != 0.0f) 
 			{
 				angle = Mathf.Atan2 (yEnemyDirection, xEnemyDirection) * Mathf.Rad2Deg;
@@ -38,9 +44,16 @@ public class EnemyMoveBehaviour : MonoBehaviour {
 			}
 			//se tourne vers la cible
 			transform.rotation = Quaternion.Euler(0, 0, angle);
+			body.MovePosition( droitDevant * moveSpeed * Time.deltaTime);
+
 			//va vers la cible
-			float step = moveSpeed * Time.deltaTime;
-			transform.position = Vector3.MoveTowards(transform.position, Target.transform.position, step);
 		}
 	}
+	/*void FixedUpdate(){
+		if (detected == true){
+			body.MovePosition(transform.position+  Target.transform.position * moveSpeed * Time.deltaTime);
+				/*float step = moveSpeed * Time.deltaTime;
+			transform.position = Vector3.MoveTowards(transform.position, Target.transform.position, step);*/
+		/*}
+	}*/
 }

@@ -24,7 +24,10 @@ GameObject:
   - component: {fileID: 114220719620589132}
   - component: {fileID: 114860717742411734}
   - component: {fileID: 114684411240811190}
+  - component: {fileID: 114003651020453186}
   - component: {fileID: 82141142510536666}
+  - component: {fileID: 50456746452255618}
+  - component: {fileID: 61299192135024634}
   m_Layer: 0
   m_Name: Ennemi
   m_TagString: Enemy
@@ -45,6 +48,51 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &50456746452255618
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1252825987762716}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 1
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!61 &61299192135024634
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1252825987762716}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!61 &61797609410538640
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -156,6 +204,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &114003651020453186
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1252825987762716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64f682ec9627ff444a9782cd57c4020b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phase: 0.65
 --- !u!114 &114220719620589132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -183,7 +243,6 @@ MonoBehaviour:
   healItem: {fileID: 1456846299155744, guid: 9c9bb6e747b7ff8419b86fda6fce0ab5, type: 2}
   counterHeal: 0
   life: 0.01
-  invincible: 0
   invincibleTime: 0
 --- !u!114 &114860717742411734
 MonoBehaviour:
@@ -196,8 +255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a66eb7028b409944a710376f09691a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 0}
-  moveSpeed: 4
+  detected: 0
+  moveSpeed: 0.5
 --- !u!212 &212711251777975548
 SpriteRenderer:
   m_ObjectHideFlags: 1

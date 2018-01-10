@@ -7,7 +7,7 @@ public class health : MonoBehaviour {
 	public int counterHeal;// compte les combos ici
 	public static bool counterReset;// remet le compteur de combos à 0
 	public float life = 1f;
-	public bool invincible;
+	public static bool invincible;
 	public float invincibleTime;
 	float currentTime;
 
@@ -52,7 +52,7 @@ public class health : MonoBehaviour {
 			counterReset = false;
 		}*/
 		//gère les frmes d'invincibilité, par défaut à 0
-		currentTime += Time.deltaTime;
+		/*currentTime += Time.deltaTime;
 		if(currentTime < invincibleTime)
 		{
 			invincible = true;
@@ -60,6 +60,6 @@ public class health : MonoBehaviour {
 		else
 		{
 			invincible = false;
-		}
+		}*/
 	}
 }
