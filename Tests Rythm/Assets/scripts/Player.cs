@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -135,6 +135,7 @@ public class Player : MonoBehaviour {
         if (other.tag =="Enemy" && isDashing == true)
         {
 			other.GetComponent <health>().Hurt(damageDash);
+			print ("pierre t méchan");
         }
 		if (other.name == "EnigmaRoom")
 			enigme.entered = true;
