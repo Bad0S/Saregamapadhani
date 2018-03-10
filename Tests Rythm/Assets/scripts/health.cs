@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class health : MonoBehaviour {
 	public GameObject healItem;
 	public int counterHeal;// compte les combos ici
 	public static bool counterReset;// remet le compteur de combos à 0
 	public float life = 1f;
+	public float damage = 1f;
 	public bool invincible;
 	public float invincibleTime;
 	float currentTime;
@@ -33,15 +35,21 @@ public class health : MonoBehaviour {
 		//fait drop un objet de soin
 		if (life <= 0f)
 		{
-			if(gameObject.tag == "Enemy"){
+			if(gameObject.tag == "Enemy")
+			{
 				GameObject drop = (GameObject)Instantiate (healItem, transform.position, transform.rotation);
+				Destroy (gameObject);
 			}
-			Destroy (gameObject);
+			if (gameObject.tag == "Player") 
+			{
+				StartCoroutine (PlayerDeath());
+			}
 		}
 	}
 		
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
 		// /!\NE PAS TOUCHER, pour les futurs combos
 		/*counterHeal = combo.counter;//appelle dans combo
 		if (counterHeal >= 5){
@@ -61,5 +69,13 @@ public class health : MonoBehaviour {
 		{
 			invincible = false;
 		}
+	}
+
+	IEnumerator PlayerDeath()
+	{
+		gameObject.GetComponent<SpriteRenderer>().enabled = false;
+		yield return new WaitForSeconds (1f);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+		Destroy (gameObject);
 	}
 }

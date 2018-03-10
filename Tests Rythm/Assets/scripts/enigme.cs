@@ -20,6 +20,7 @@ public class enigme : MonoBehaviour {
 	private bool kill;
 	string test;
 	public static bool entered;
+    public GameObject bloc;
 	// Use this for initialization
 	void Start () 
 	{
@@ -113,8 +114,9 @@ public class enigme : MonoBehaviour {
 			enigmaRenderer.color = Color.white;
 		}
 		//détecte si l'éngime doit être kill ainsi que le bloc
-		if (kill == true) {
-			block.kill = true;
+		if (kill == true)
+        {
+            Destroy(bloc);
 			Destroy (gameObject);
 		}
 	}
