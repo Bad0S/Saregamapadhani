@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PostProcessing;
 
 public class Rythme : MonoBehaviour
 {
-    public float bpmInitial = 81;
+    public float bpmInitial = 110;
     public float bpm;
     private AudioSource sourceSon;
     private float timeBetweenBeatsInSeconds;
@@ -12,6 +13,8 @@ public class Rythme : MonoBehaviour
     private float musicTime;
     public int beats = 1;
     public int combo;
+    public PostProcessingProfile initial;
+    public PostProcessingProfile transe;
     // Use this for initialization
     void Start()
     {
@@ -39,6 +42,10 @@ public class Rythme : MonoBehaviour
                 print(tempSous);
                 combo += Mathf.RoundToInt((1-tempSous)*100);
             }
+        }
+        if (combo > 500)
+        {
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = transe;
         }
     }
 }
