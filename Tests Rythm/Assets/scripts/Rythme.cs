@@ -43,9 +43,13 @@ public class Rythme : MonoBehaviour
                 combo += Mathf.RoundToInt((1-tempSous)*100);
             }
         }
-        if (combo > 500)
+		if (Input.GetKeyDown(KeyCode.A))
         {
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = transe;
         }
+		if (Input.GetKeyDown(KeyCode.Z))
+		{
+			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = initial;
+		}
     }
 }
