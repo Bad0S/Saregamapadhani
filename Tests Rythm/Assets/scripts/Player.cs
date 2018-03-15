@@ -33,15 +33,21 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update () 
 	{
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-        {
-            déplacement = new Vector2(Input.GetAxisRaw("Horizontal") * MovSpeed, Input.GetAxisRaw("Vertical") * MovSpeed);
-            body.position += (déplacement);
-            float angle = (Mathf.Atan2(Input.GetAxisRaw("Horizontal"), (Input.GetAxisRaw("Vertical"))) * -Mathf.Rad2Deg);
-            body.transform.rotation = Quaternion.Euler(0, 0, angle);
-        }
+		if (Input.GetAxisRaw ("Horizontal") != 0 || Input.GetAxisRaw ("Vertical") != 0) {
+			déplacement = new Vector2 (Input.GetAxisRaw ("Horizontal") * MovSpeed, Input.GetAxisRaw ("Vertical") * MovSpeed);
+			body.position += (déplacement);
+			anim.SetBool ("IsMoving", true);
+			//float angle = (Mathf.Atan2(Input.GetAxisRaw("Horizontal"), (Input.GetAxisRaw("Vertical"))) * -Mathf.Rad2Deg);
+			//body.transform.rotation = Quaternion.Euler(0, 0, angle);
+		} 
+		else 
+		{
+			anim.SetBool ("IsMoving", false);
+		}
         Attack ();
-		LifeBar.fillAmount = gameObject.GetComponent<health> ().life / 100;
+		//LifeBar.fillAmount = gameObject.GetComponent<health> ().life / 100;
+		anim.SetFloat ("XSpeed", Input.GetAxisRaw ("Horizontal"));
+		anim.SetFloat ("YSpeed", Input.GetAxisRaw ("Vertical"));
 	}
 	void Attack()
 	{
