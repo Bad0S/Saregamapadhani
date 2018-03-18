@@ -15,7 +15,6 @@ public class Groupie : MonoBehaviour
     public float vitesseChasse;
     public bool JoueurBond;
     public float vitesseBond;
-
 	// Use this for initialization
 	void Awake ()
     {
