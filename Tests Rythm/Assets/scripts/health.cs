@@ -37,7 +37,17 @@ public class health : MonoBehaviour {
 		{
 			if(gameObject.tag == "Enemy")
 			{
-				GameObject drop = (GameObject)Instantiate (healItem, transform.position, transform.rotation);
+				//GameObject drop = (GameObject)Instantiate (healItem, transform.position, transform.rotation);
+				try
+				{
+					if(GetComponent <EnemyBehaviour>().grabbed == true){
+						GameObject.FindGameObjectWithTag ("Player").GetComponent <Player>().GrabUngrab () ;
+					}
+				}
+				catch 
+				{
+					
+				}
 				Destroy (gameObject);
 			}
 			if (gameObject.tag == "Player") 
