@@ -20,6 +20,8 @@ public class Player : MonoBehaviour {
     public List<AudioClip> attackSounds;
     public int indexAttackSounds;
 
+	public bool grabbed;
+
     // Use this for initialization
     void Start () 
 	{
@@ -36,13 +38,16 @@ public class Player : MonoBehaviour {
 		if (Input.GetAxisRaw ("Horizontal") != 0 || Input.GetAxisRaw ("Vertical") != 0) {
 			déplacement = new Vector2 (Input.GetAxisRaw ("Horizontal") * MovSpeed, Input.GetAxisRaw ("Vertical") * MovSpeed);
 			body.position += (déplacement);
+			anim.SetBool ("IsIdle", false);
 			anim.SetBool ("IsMoving", true);
 			//float angle = (Mathf.Atan2(Input.GetAxisRaw("Horizontal"), (Input.GetAxisRaw("Vertical"))) * -Mathf.Rad2Deg);
 			//body.transform.rotation = Quaternion.Euler(0, 0, angle);
 		} 
 		else 
 		{
+			anim.SetBool ("IsIdle", true);
 			anim.SetBool ("IsMoving", false);
+
 		}
         Attack ();
 		//LifeBar.fillAmount = gameObject.GetComponent<health> ().life / 100;
@@ -66,11 +71,12 @@ public class Player : MonoBehaviour {
 			if (Input.GetButtonDown ("Fire2") == true) 
 			{
                 indexAttackSounds = Random.Range(0, 8);
-                audioSource.clip = attackSounds[indexAttackSounds];
-				anim.SetTrigger ("MakeItPan");
+                //audioSource.clip = attackSounds[indexAttackSounds];
+				//anim.SetTrigger ("MakeItPan");
                 audioSource.Play ();
-				Instantiate (Attaque2, transform);
+				//Instantiate (Attaque2, transform);
 				StartCoroutine(CDAttack());
+				anim.SetTrigger("Attack_Slash");
 			}
 			if (Input.GetButtonUp ("Fire2") == true) 
 			{
@@ -99,16 +105,21 @@ public class Player : MonoBehaviour {
 		{
 			enigme.entered = true;
 		}
-		if (other.tag == "Enemy") 
-		{
-			gameObject.GetComponent<health>().Hurt(other.gameObject.GetComponent<health>().damage);
-		}
     }
+
+	public void GrabUngrab(){
+		if (grabbed == true) {
+			MovSpeed *= 0.6f;	
+		}
+		else{
+			MovSpeed *= 1.66666f;
+		}
+	}
 
 	IEnumerator CDAttack()
 	{
 		canAttack = false;
-		yield return new WaitForSeconds (0.5f);
+		yield return new WaitForSeconds (0.3f);
 		canAttack = true;
 	}
 }

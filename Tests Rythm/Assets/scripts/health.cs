@@ -37,7 +37,20 @@ public class health : MonoBehaviour {
 		{
 			if(gameObject.tag == "Enemy")
 			{
-				GameObject drop = (GameObject)Instantiate (healItem, transform.position, transform.rotation);
+				//GameObject drop = (GameObject)Instantiate (healItem, transform.position, transform.rotation);
+				try
+				{
+					if(GetComponent <EnemyBehaviour>().grabbed == true){
+						GameObject.FindGameObjectWithTag ("Player").GetComponent <Player>().grabbed = false ;
+						GameObject.FindGameObjectWithTag ("Player").GetComponent <Player>().GrabUngrab () ;
+
+					}
+				}
+				catch 
+				{
+					
+				}
+
 				Destroy (gameObject);
 			}
 			if (gameObject.tag == "Player") 
@@ -73,7 +86,7 @@ public class health : MonoBehaviour {
 
 	IEnumerator PlayerDeath()
 	{
-		gameObject.GetComponent<SpriteRenderer>().enabled = false;
+		gameObject.GetComponent<Animator>().SetTrigger ("Mort");
 		yield return new WaitForSeconds (1f);
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 		Destroy (gameObject);
