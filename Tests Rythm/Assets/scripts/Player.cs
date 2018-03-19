@@ -22,6 +22,12 @@ public class Player : MonoBehaviour {
 
 	public bool grabbed;
 
+	//DASH
+	float xDashDirectionStick;
+	float yDashDirectionStick;
+	Vector2 directionDash;
+	public float forceDash;
+
     // Use this for initialization
     void Start () 
 	{
@@ -53,6 +59,12 @@ public class Player : MonoBehaviour {
 		//LifeBar.fillAmount = gameObject.GetComponent<health> ().life / 100;
 		anim.SetFloat ("XSpeed", Input.GetAxisRaw ("Horizontal"));
 		anim.SetFloat ("YSpeed", Input.GetAxisRaw ("Vertical"));
+
+
+		//DASH
+		xDashDirectionStick = Input.GetAxis("Horizontal");
+		yDashDirectionStick = Input.GetAxis("Vertical");
+
 	}
 	void Attack()
 	{
@@ -94,7 +106,15 @@ public class Player : MonoBehaviour {
 			}
 			if (Input.GetButtonDown ("Jump") == true) 
 			{
-				Instantiate (Esquive, transform);
+				if (xDashDirectionStick != 0.0f || yDashDirectionStick != 0.0f) 
+				{
+					directionDash = new Vector2 (xDashDirectionStick, yDashDirectionStick);
+					body.AddForce (directionDash * forceDash, ForceMode2D.Impulse);
+				}
+				else{
+					body.AddForce (Vector2.up * forceDash, ForceMode2D.Impulse);
+				}
+				//Instantiate (Esquive, transform);
 			}
 		}
     }

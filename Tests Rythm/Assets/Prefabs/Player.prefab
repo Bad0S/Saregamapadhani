@@ -214,6 +214,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0f601b9e78548714c96189fd7055a3b3, type: 3}
   indexAttackSounds: 0
   grabbed: 0
+  forceDash: 17
 --- !u!114 &114897524187859054
 MonoBehaviour:
   m_ObjectHideFlags: 1
