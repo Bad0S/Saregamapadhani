@@ -74,7 +74,7 @@ public class Player : MonoBehaviour {
                 //audioSource.clip = attackSounds[indexAttackSounds];
 				//anim.SetTrigger ("MakeItPan");
                 audioSource.Play ();
-				//Instantiate (Attaque2, transform);
+				Instantiate (Attaque2, transform);
 				StartCoroutine(CDAttack());
 				anim.SetTrigger("Attack_Slash");
 			}

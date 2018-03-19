@@ -69,7 +69,6 @@ public class EnemyBehaviour : MonoBehaviour {
 		timerComparison += Time.deltaTime;
 		timerGrabbing += Time.deltaTime;
 		if(isJumping == true){
-			print ("yes");
 			if (targetVector.magnitude >closenessComparison&& targetVector.magnitude<2.5f){
 				if (isFighting == true) {
 					GetComponent <Rigidbody2D> ().drag = 20;
