@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
@@ -16,9 +16,16 @@ public class Player : MonoBehaviour {
 	private SpriteRenderer render;
     private Vector2 déplacement;
 	public bool canAttack;
-	public Image LifeBar;
-    public List<AudioClip> attackSounds;
     public int indexAttackSounds;
+    public AudioClip attaque1;
+    public AudioClip attaque2;
+    public AudioClip attaqueUlt;
+    public AudioClip evasion;
+    public float dashTimer = 3f;
+    public float DashSpeed = 4;
+    public float dashCooldown = 3f;
+
+	public bool grabbed;
 
     // Use this for initialization
     void Start () 
@@ -33,58 +40,75 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update () 
 	{
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-        {
-            déplacement = new Vector2(Input.GetAxisRaw("Horizontal") * MovSpeed, Input.GetAxisRaw("Vertical") * MovSpeed);
-            body.position += (déplacement);
-            float angle = (Mathf.Atan2(Input.GetAxisRaw("Horizontal"), (Input.GetAxisRaw("Vertical"))) * -Mathf.Rad2Deg);
-            body.transform.rotation = Quaternion.Euler(0, 0, angle);
-        }
-        Attack ();
-		LifeBar.fillAmount = gameObject.GetComponent<health> ().life / 100;
-	}
-	void Attack()
-	{
-		if (canAttack == true) 
+        dashTimer += Time.deltaTime;
+		if (Input.GetAxisRaw ("Horizontal") != 0 || Input.GetAxisRaw ("Vertical") != 0) {
+			déplacement = new Vector2 (Input.GetAxisRaw ("Horizontal") * MovSpeed, Input.GetAxisRaw ("Vertical") * MovSpeed);
+			body.position += (déplacement);
+			anim.SetBool ("IsIdle", false);
+			anim.SetBool ("IsMoving", true);
+			//float angle = (Mathf.Atan2(Input.GetAxisRaw("Horizontal"), (Input.GetAxisRaw("Vertical"))) * -Mathf.Rad2Deg);
+			//body.transform.rotation = Quaternion.Euler(0, 0, angle);
+		} 
+		else 
 		{
-			if (Input.GetButtonDown ("Fire1") == true) 
-			{
-                indexAttackSounds = Random.Range(0, attackSounds.Count);
-				audioSource.clip = attackSounds[indexAttackSounds];
-				audioSource.Play ();
-				Instantiate (Attaque1, transform);
-				StartCoroutine(CDAttack());
-            
-		    }
-			//si le joueur appuie sur le bouton d'attaque 1, il joue le son de cette attaque, et fait apparaître la hitbox de l'attaque
-			if (Input.GetButtonDown ("Fire2") == true) 
-			{
-                indexAttackSounds = Random.Range(0, 8);
-                audioSource.clip = attackSounds[indexAttackSounds];
-				anim.SetTrigger ("MakeItPan");
-                audioSource.Play ();
-				Instantiate (Attaque2, transform);
-				StartCoroutine(CDAttack());
-			}
-			if (Input.GetButtonUp ("Fire2") == true) 
-			{
-                audioSource.panStereo = 0.0f;
-			}
-			//si le joueur appuie sur le bouton d'attaque 2, il joue le son de cette attaque, le fait passer de gauche à droite dans les oreilles avec une animation, et fait apparaître la hitbox de l'attaque
+			anim.SetBool ("IsIdle", true);
+			anim.SetBool ("IsMoving", false);
 
-			if (Input.GetButtonDown ("Fire3") == true) 
-			{
-                indexAttackSounds = Random.Range(0, 8);
-                audioSource.clip = attackSounds[indexAttackSounds];
-                audioSource.Play ();	
-				Instantiate (Attaque3, transform);
-				StartCoroutine(CDAttack());
-			}
-			if (Input.GetButtonDown ("Jump") == true) 
-			{
-				Instantiate (Esquive, transform);
-			}
 		}
+        Attack ();
+		anim.SetFloat ("XSpeed", Input.GetAxisRaw ("Horizontal"));
+		anim.SetFloat ("YSpeed", Input.GetAxisRaw ("Vertical"));
+	}
+    void Attack()
+    {
+        if (canAttack == true)
+        {
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
+            if (Input.GetButtonDown("Fire1") == true)
+            {
+                audioSource.clip = attaque1;
+                audioSource.Play();
+                Instantiate(Attaque1, transform);
+                StartCoroutine(CDAttack());
+            }
+            //si le joueur appuie sur le bouton d'attaque 1, il joue le son de cette attaque, et fait apparaître la hitbox de l'attaque
+            if (Input.GetButtonDown("Fire2") == true)
+            {
+                audioSource.clip = attaque2;
+                //anim.SetTrigger ("MakeItPan");
+                audioSource.Play();
+                Instantiate(Attaque2, transform);
+                StartCoroutine(CDAttack());
+                anim.SetTrigger("Attack_Slash");
+            }
+            if (Input.GetButtonUp("Fire2") == true)
+            {
+                audioSource.panStereo = 0.0f;
+            }
+            //si le joueur appuie sur le bouton d'attaque 2, il joue le son de cette attaque, le fait passer de gauche à droite dans les oreilles avec une animation, et fait apparaître la hitbox de l'attaque
+
+            if (Input.GetButtonDown("Fire3") == true)
+            {
+                audioSource.clip = attaqueUlt;
+                audioSource.Play();
+                Instantiate(Attaque3, transform);
+                StartCoroutine(CDAttack());
+            }
+            if (Input.GetButtonDown("Jump") == true && dashTimer >= dashCooldown)
+            {
+                audioSource.clip = evasion;
+                audioSource.Play();
+				if (xDashDirectionStick != 0.0f || yDashDirectionStick != 0.0f) 
+				{
+					directionDash = new Vector2 (xDashDirectionStick, yDashDirectionStick);
+					body.AddForce (directionDash * forceDash, ForceMode2D.Impulse);
+				}
+				else{
+					body.AddForce (Vector2.up * forceDash, ForceMode2D.Impulse);
+				}
+                dashTimer = 0f;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -93,16 +117,21 @@ public class Player : MonoBehaviour {
 		{
 			enigme.entered = true;
 		}
-		if (other.tag == "Enemy") 
-		{
-			gameObject.GetComponent<health>().Hurt(other.gameObject.GetComponent<health>().damage);
-		}
     }
+
+	public void GrabUngrab(){
+		if (grabbed == true) {
+			MovSpeed *= 0.6f;	
+		}
+		else{
+			MovSpeed *= 1.66666f;
+		}
+	}
 
 	IEnumerator CDAttack()
 	{
 		canAttack = false;
-		yield return new WaitForSeconds (0.5f);
+		yield return new WaitForSeconds (0.3f);
 		canAttack = true;
 	}
 }

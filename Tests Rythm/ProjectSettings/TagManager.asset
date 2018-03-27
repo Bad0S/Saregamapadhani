@@ -5,6 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - PlayerAttack
+  - onde
+  - Interrupteur
+  - ReflectG
+  - ReflectD
+  - ReflectH
+  - ReflectB
   layers:
   - Default
   - TransparentFX
@@ -16,7 +23,7 @@ TagManager:
   - 
   - Player
   - murs
-  - 
+  - luisant
   - 
   - 
   - 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class healthItem : MonoBehaviour {
-	public float lifeGained = 0.2f;// la vie que tu gagnes
+	public int lifeGained = 1;// la vie que tu gagnes
 	// Use this for initialization
 	void Start () {
 		

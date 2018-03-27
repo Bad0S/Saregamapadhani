@@ -15,6 +15,7 @@ public class Rythme : MonoBehaviour
     public int combo;
     public PostProcessingProfile initial;
     public PostProcessingProfile transe;
+	public PostProcessingProfile Transcendance;
     // Use this for initialization
     void Start()
     {
@@ -34,22 +35,29 @@ public class Rythme : MonoBehaviour
             beats += 1;
             timeRBetweenBeats = 0;
         }
-        if (Input.anyKeyDown)
+		if (Input.GetKeyDown(KeyCode.T))
         {
             float tempSous = timeBetweenBeatsInSeconds - timeRBetweenBeats;
             if ((0f < tempSous && tempSous < 0.2f) || (0.54f < tempSous && tempSous < timeBetweenBeatsInSeconds))
             {
-                print(tempSous);
                 combo += Mathf.RoundToInt((1-tempSous)*100);
             }
         }
-		if (Input.GetKeyDown(KeyCode.A))
-        {
-            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = transe;
-        }
-		if (Input.GetKeyDown(KeyCode.Z))
+		if (Input.GetKeyDown(KeyCode.N)) 
 		{
 			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = initial;
+			GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled = false;
+		}
+		if ( Input.GetKeyDown(KeyCode.T))
+        {
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = transe;
+			GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled = false;
+			
+        }
+		if (Input.GetKeyDown(KeyCode.Y))
+		{
+			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = Transcendance;
+			GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled= true;
 		}
     }
 }
