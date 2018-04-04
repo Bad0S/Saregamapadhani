@@ -13,7 +13,7 @@ public class health : MonoBehaviour {
 	public bool invincible;
 	public float invincibleTime;
 	float currentTime;
-	public List<Image> LifeBar;
+	public List<Sprite> LifeBar;
 	public Sprite pvVide;
 
 
@@ -35,7 +35,11 @@ public class health : MonoBehaviour {
 		{
 			if (gameObject.tag == "Player") 
 			{
-				LifeBar [life-1].sprite = pvVide;
+				LifeBar [life-1] = pvVide;
+			}
+			if (gameObject.tag == "Enemy") 
+			{
+				GameObject.FindGameObjectWithTag ("Player").GetComponent <Rythme>().combo += lifeToLose ;
 			}
 			life -= lifeToLose;
 		}
@@ -47,10 +51,10 @@ public class health : MonoBehaviour {
 				//GameObject drop = (GameObject)Instantiate (healItem, transform.position, transform.rotation);
 				try
 				{
-					if(GetComponent <EnemyBehaviour>().grabbed == true){
+					if(GetComponent <EnemyBehaviour>().grabbed == true)
+					{
 						GameObject.FindGameObjectWithTag ("Player").GetComponent <Player>().grabbed = false ;
 						GameObject.FindGameObjectWithTag ("Player").GetComponent <Player>().GrabUngrab () ;
-
 					}
 				}
 				catch 
@@ -88,6 +92,14 @@ public class health : MonoBehaviour {
 		else
 		{
 			invincible = false;
+		}
+	}
+
+	void OnTriggerEnter2D (Collider2D other)
+	{
+		if (gameObject.tag == "Enemy" && other.tag == "PlayerAttack") 
+		{
+			Hurt (other.GetComponentInParent<health>().damage);
 		}
 	}
 

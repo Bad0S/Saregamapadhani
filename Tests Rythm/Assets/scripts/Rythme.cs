@@ -12,7 +12,7 @@ public class Rythme : MonoBehaviour
     private float timeRBetweenBeats;
     private float musicTime;
     public int beats = 1;
-    public int combo;
+    public float combo;
     public PostProcessingProfile initial;
     public PostProcessingProfile transe;
 	public PostProcessingProfile Transcendance;
@@ -30,34 +30,29 @@ public class Rythme : MonoBehaviour
         timeRBetweenBeats += Time.deltaTime;
         bpm = bpmInitial * sourceSon.pitch;
         timeBetweenBeatsInSeconds = 60 / bpm;
-        if (musicTime >= timeBetweenBeatsInSeconds * beats)
-        {
-            beats += 1;
-            timeRBetweenBeats = 0;
-        }
-		if (Input.GetKeyDown(KeyCode.T))
-        {
-            float tempSous = timeBetweenBeatsInSeconds - timeRBetweenBeats;
-            if ((0f < tempSous && tempSous < 0.2f) || (0.54f < tempSous && tempSous < timeBetweenBeatsInSeconds))
-            {
-                combo += Mathf.RoundToInt((1-tempSous)*100);
-            }
-        }
-		if (Input.GetKeyDown(KeyCode.N)) 
+		if (musicTime >= timeBetweenBeatsInSeconds * beats) 
+		{
+			beats += 1;
+			timeRBetweenBeats = 0;
+		}
+		if (combo <= 0) 
 		{
 			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = initial;
-			GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled = false;
+			//GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled = false;
 		}
-		if ( Input.GetKeyDown(KeyCode.T))
+		if (combo < 30 && combo > 0)
         {
             GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = transe;
-			GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled = false;
-			
+			//GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled = false;
+			GetComponent<Player> ().MovSpeed = 0.13f + combo/600;
+			sourceSon.pitch = 1 + combo / 300;
         }
-		if (Input.GetKeyDown(KeyCode.Y))
+		if (combo >= 30)
 		{
 			GameObject.FindGameObjectWithTag("MainCamera").GetComponent<PostProcessingBehaviour>().profile = Transcendance;
-			GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled= true;
+			//GameObject.FindGameObjectWithTag ("MainCamera").GetComponentInChildren<SpriteRenderer> ().enabled= true;
+			GetComponent<Player> ().MovSpeed = 0.2f;
+			GetComponent<Player> ().transcendance = true;
 		}
     }
 }
