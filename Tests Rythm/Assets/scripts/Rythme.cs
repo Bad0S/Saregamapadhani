@@ -16,6 +16,7 @@ public class Rythme : MonoBehaviour
     public PostProcessingProfile initial;
     public PostProcessingProfile transe;
 	public PostProcessingProfile Transcendance;
+	public bool isBeating;
     // Use this for initialization
     void Start()
     {
@@ -30,10 +31,15 @@ public class Rythme : MonoBehaviour
         timeRBetweenBeats += Time.deltaTime;
         bpm = bpmInitial * sourceSon.pitch;
         timeBetweenBeatsInSeconds = 60 / bpm;
-		if (musicTime >= timeBetweenBeatsInSeconds * beats) 
-		{
+		//print (isBeating); 
+
+		if (musicTime >= timeBetweenBeatsInSeconds * beats) {
 			beats += 1;
+			isBeating = true;
 			timeRBetweenBeats = 0;
+		} else{
+			isBeating = false;
+
 		}
 		if (combo <= 0) 
 		{

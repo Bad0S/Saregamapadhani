@@ -14,16 +14,47 @@ public class CameraBehaviour : MonoBehaviour
     private AudioSource camSource;
     public AudioClip calme;
     public AudioClip combat;
-
+	private Vector3 originalPos;
+	public bool Effect;
 	void Start()
 	{
 		cam = GetComponent<Camera>();
         camSource = GetComponent<AudioSource>();
 	}
 	//si on appuie sur R, recharge la scène
+	public IEnumerator ScreenShake (float TimeToShake, float magnitude)
+	{
+		Effect = true;
+		originalPos = transform.position;
 
+
+		float elapsed = 0.0f;
+
+		while (elapsed < TimeToShake) {
+			float x = Random.Range (-1f, 1f) * magnitude + originalPos.x;
+			float y = Random.Range (-1f, 1f) * magnitude + originalPos.y;
+			transform.localPosition = new Vector3 (x, y, originalPos.z);
+
+			elapsed += Time.deltaTime;
+
+			yield return null;
+
+
+		}
+		Effect = false;
+		transform.localPosition = originalPos;
+
+	}
 	void Update()
 	{
+		if (Input.GetButtonDown("Fire1"))
+		{
+			print ("a");
+
+			StartCoroutine(ScreenShake(0.3f,0.3f));
+		}
+
+
 		if (target.position.y > trigger1.position.y && target.position.y < trigger2.position.y) 
 		{
 			cinematique = true;

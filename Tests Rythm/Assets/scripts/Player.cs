@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
 	private Animator anim;
 	private Animator animAttaques;
 	private SpriteRenderer render;
+	private Shader shaderDeBase;
+
 
 	//Move
     private Vector2 déplacement;
@@ -53,6 +55,7 @@ public class Player : MonoBehaviour
 		render = GetComponent<SpriteRenderer> ();
 		playerColl = GetComponent<Collider2D> ();
 		MovSpeed = 0.13f;
+		shaderDeBase = Shader.Find("Sprites/Default"); 
 	}
 
     // Update is called once per frame
@@ -141,9 +144,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-		if (other.name == "EnigmaRoom") 
+		if (other.name == "Enemy") 
 		{
-			//enigme.entered = true;
+			backUpNormal ();
 		}
     }
 
@@ -156,6 +159,10 @@ public class Player : MonoBehaviour
 		else{
 			speedMultiplicator = 1;
 		}
+	}
+	IEnumerator backUpNormal(){
+		yield return new WaitForSeconds (0.12f);
+		render.material.shader = shaderDeBase;
 	}
 
 	IEnumerator slashCoroutine()

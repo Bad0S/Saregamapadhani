@@ -7,7 +7,7 @@ public class EnemyBehaviour : MonoBehaviour {
 	//Axel's pathifinding 
 	private Animator anim;
 	[SerializeField]private float speed;
-	[SerializeField]private GameObject attackHitbox;
+	//[SerializeField]private GameObject attackHitbox;
 	[SerializeField]private float maxDetectionRange;
 	[SerializeField]private float attackRangeMax;
 	private ContactFilter2D cFilter; 
@@ -45,18 +45,34 @@ public class EnemyBehaviour : MonoBehaviour {
     private AudioSource groupieSource;
 
 	//ATTENTION IL VA ATTAQUER
-	private Shader shaderEnBlanc;
+	private Shader shaderDeCouleur;
 	private Shader shaderDeBase;
+	private Color couleurDeBase;
+	private Color couleurRougeShader;
+	private Color couleurBlancheShader;
+	public float opacityShader=0f;
+	private SpriteRenderer playerVictimeRend;
+	private Rigidbody2D playerRB;
 
 	public bool aEteRepousse;
 
+	// le rythme
+	public bool beatAllowAttack;
+	public Rythme rythmeScript;
+	private int rythmeRange;
+	public int rythmeRangeMax;
+	private int counterRythme;
+
     void Start ()
     {
+		rythmeRange = Random.Range (1, rythmeRangeMax +1);
+		print (rythmeRange); 
+		rythmeScript = target.GetComponent <Rythme> ();
 		anim = GetComponent<Animator> ();
 		rb2D = GetComponent<Rigidbody2D> ();
 		//target = GameObject.FindGameObjectWithTag ("Player");
 
-		shaderEnBlanc = Shader.Find("GUI/Text Shader");
+		shaderDeCouleur = Shader.Find("GUI/Text Shader");
 		shaderDeBase = Shader.Find("Sprites/Default"); // or whatever sprite shader is being used
 		enemyRenderer = GetComponent<SpriteRenderer> ();
 
@@ -66,10 +82,29 @@ public class EnemyBehaviour : MonoBehaviour {
 			transform.localScale= new Vector3(1.2f,1.2f,1);
 		}
         groupieSource = GetComponent<AudioSource>();
+		couleurDeBase = enemyRenderer.color;
+		playerVictimeRend= target.GetComponent <SpriteRenderer>();
+		playerRB= target.GetComponent <Rigidbody2D>();
+
 	}
 
 	void Update () 
 	{
+		beatAllowAttack = rythmeScript.isBeating;
+		/*if (beatAllowAttack == true){
+			if(counterRythme <= rythmeRangeMax){
+
+				if(counterRythme != rythmeRange){
+					beatAllowAttack = false;
+				}
+				counterRythme++;
+
+			}
+			else{
+				counterRythme = 1;
+			}
+		}*/
+
 		if (grabbed == true) 
 		{
 			GetComponent<BoxCollider2D> ().isTrigger = true;
@@ -88,11 +123,12 @@ public class EnemyBehaviour : MonoBehaviour {
 			isFighting = false;
 			aEteRepousse = false;
 		}
+		targetVector = target.transform.position -transform.position;
 
 		//GRAB
 		if (grabbed ==false){
 			
-			if (targetVector.magnitude < attackRangeMax  && isFighting == false) {
+			if (targetVector.magnitude < attackRangeMax  && isFighting == false&&beatAllowAttack == true) {
 				if (canGrab == true){
 					if (isGrabbing == false&&timerGrabbing> timeBursting+ 2){
 						StartCoroutine ("GrabSequence");
@@ -105,10 +141,9 @@ public class EnemyBehaviour : MonoBehaviour {
 			}
 		}
 		else{
-			//transform.position = target.transform.position;
+			transform.position = target.transform.position;
 		}
 		//PATHFINDING
-		targetVector = target.transform.position -transform.position;
 		if (targetVector.magnitude < maxDetectionRange && isFighting == false) 
 		{
 			if (idling == true) 
@@ -117,7 +152,13 @@ public class EnemyBehaviour : MonoBehaviour {
 			}
 
 			anim.SetBool ("IsMoving", true);
-			rb2D.velocity = Vector3.Normalize(targetVector)*speed;
+			if (timerWaitRepousse > 0.35f && aEteRepousse == false) {
+				rb2D.velocity = Vector3.Normalize (targetVector) * speed;
+			}
+			else if(aEteRepousse = false){
+				aEteRepousse = false;
+				timerWaitRepousse = 0;
+			}
 			//anim.SetBool ("Walking", true);
 			if (targetVector.x > 0) {
 				GetComponent<SpriteRenderer> ().flipX = true;
@@ -125,7 +166,7 @@ public class EnemyBehaviour : MonoBehaviour {
 				GetComponent<SpriteRenderer> ().flipX = false;
 			}
 
-		} else {
+	} else {
 			//anim.SetBool("Walking",false);
 			if (idleCanMove == true && isFighting == false)
 			{
@@ -155,21 +196,29 @@ public class EnemyBehaviour : MonoBehaviour {
 	}
 
 	void WhiteSprite() {
-		enemyRenderer.material.shader = shaderEnBlanc;
+		enemyRenderer.material.shader = shaderDeCouleur;
 		enemyRenderer.color = Color.white;
+	}
+
+	void RedSprite() {
+		enemyRenderer.material.shader = shaderDeCouleur;
+		enemyRenderer.color = Color.red;
+
 	}
 
 	void NormalSprite() {
 		enemyRenderer.material.shader = shaderDeBase;
-		enemyRenderer.color = Color.white;
+		enemyRenderer.color = couleurDeBase;
 	}
 
 	IEnumerator FightSequence()
 	{
+		yield return new WaitForSeconds (0.20f);
 		WhiteSprite ();
 		isFighting = true;
-		yield return new WaitForSeconds (0.36f);
+		yield return new WaitForSeconds (0.16f);
 		NormalSprite ();
+		yield return new WaitForSeconds (0.14f);
 		anim.SetBool ("IsAttacking", true);
 		targetVectorAttacking = targetVector;
 		//anim.SetTrigger ("Fighting");
@@ -177,9 +226,10 @@ public class EnemyBehaviour : MonoBehaviour {
 		isJumping = true;
 		rb2D.AddForce (targetVectorAttacking * vitesseBond, ForceMode2D.Impulse);
 		//Instantiate (attackHitbox, transform);
-		yield return new WaitForSeconds (1f);
-		isFighting = false;
+		yield return new WaitForSeconds (0.36f);
 		isJumping = false;
+		yield return new WaitForSeconds (0.64f);
+		isFighting = false;
 		anim.SetBool ("IsAttacking", false);
 	}
 
@@ -188,6 +238,7 @@ public class EnemyBehaviour : MonoBehaviour {
 		{
 			if(isJumping == true){
 				other.gameObject.GetComponent<health>().Hurt(damage);
+				StartCoroutine (PlayerDamage ());
 
 			}
 			else if(isGrabbing ==true){
@@ -203,10 +254,12 @@ public class EnemyBehaviour : MonoBehaviour {
 	{
 		if (other.tag == "PlayerAttack") 
 		{
+			StartCoroutine (Knockback ());
 			if(grabbed == true)
 			{
 				GameObject.FindGameObjectWithTag ("Player").GetComponent <Player>().grabbed = false ;
 				GameObject.FindGameObjectWithTag ("Player").GetComponent <Player>().GrabUngrab () ;
+
 			}
 		}
 
@@ -227,10 +280,7 @@ public class EnemyBehaviour : MonoBehaviour {
 			anim.SetBool ("IsAttacking", false);
 			GetComponent<BoxCollider2D> ().isTrigger = false;
 			rb2D.velocity = Vector2.zero;
-			print (rb2D.velocity);
-			rb2D.AddForce (new Vector2(-targetVector.x,-targetVector.y).normalized*60000000000000000,ForceMode2D.Impulse);
-			print (targetVector);
-
+			rb2D.AddForce (new Vector2(-targetVector.x,-targetVector.y).normalized*60,ForceMode2D.Impulse);
 		}
 	}
 
@@ -251,6 +301,43 @@ public class EnemyBehaviour : MonoBehaviour {
 		}
 	}*/
 
+	IEnumerator Knockback(){
+		timerWaitRepousse = 0;
+		aEteRepousse = true;
+		StopCoroutine ("FightSequence");
+		if(!canGrab)
+			NormalSprite ();
+		isJumping = false;
+		if(isGrabbing){
+			StopCoroutine ("GrabSequence");
+			speed /= speedBurst;
+			isGrabbing = false;
+			timerGrabbing = 0;
+		}
+		RedSprite ();
+		GetComponent<BoxCollider2D> ().isTrigger = false;
+		rb2D.velocity = Vector2.zero;
+		rb2D.AddForce (new Vector2(-targetVector.x,-targetVector.y).normalized*30f,ForceMode2D.Impulse);
+		yield return new WaitForSeconds(0.07f);
+		NormalSprite ();
+		yield return new WaitForSeconds(0.07f);
+
+	}
+
+	IEnumerator PlayerDamage(){
+		playerVictimeRend.material.shader = shaderDeCouleur;
+		playerVictimeRend.color = Color.red;
+
+
+		playerRB.velocity = Vector2.zero;
+		playerRB.AddForce (new Vector2(targetVector.x,targetVector.y).normalized*18f,ForceMode2D.Impulse);
+		yield return new WaitForSeconds(0.12f);
+		playerVictimeRend.material.shader = shaderDeBase;
+		playerVictimeRend.color = couleurDeBase;
+		yield return new WaitForSeconds(0.07f);
+
+	}
+
 	IEnumerator MoveAndWait(float secMove,float secWait) // l'idle
 	{
 		idleCanMove = false;
@@ -264,13 +351,7 @@ public class EnemyBehaviour : MonoBehaviour {
 		idleCanMove = true;
 		idling = false;
 	}
-
-	void Death()
-	{
-		Destroy (gameObject);
-		//Particles confettis !
-	}
-
+		
 	//pour faire du wait prce que les timers ça va bien 5 minutes
 	public void Wait(float seconds ){
 		StartCoroutine(Waiting(seconds));
@@ -278,4 +359,7 @@ public class EnemyBehaviour : MonoBehaviour {
 	IEnumerator Waiting(float time){
 		yield return new WaitForSeconds(time);
 	}
+
+
 }
+
