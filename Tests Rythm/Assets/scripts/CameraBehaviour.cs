@@ -47,11 +47,11 @@ public class CameraBehaviour : MonoBehaviour
 	}
 	void Update()
 	{
-		if (Input.GetButtonDown("Fire1"))
+		if (Input.GetButtonDown("Fire4"))
 		{
 			print ("a");
 
-			StartCoroutine(ScreenShake(0.3f,0.3f));
+			StartCoroutine(ScreenShake(0.2f,0.3f));
 		}
 
 

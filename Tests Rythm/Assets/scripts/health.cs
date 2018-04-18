@@ -39,6 +39,7 @@ public class health : MonoBehaviour {
 			}
 			if (gameObject.tag == "Enemy") 
 			{
+				
 				GameObject.FindGameObjectWithTag ("Player").GetComponent <Rythme>().combo += lifeToLose ;
 			}
 			life -= lifeToLose;
