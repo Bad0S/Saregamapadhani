@@ -5,7 +5,7 @@ using NUnit.Framework.Internal;
 
 public class Enemy : MonoBehaviour {
 
-    public Player player;
+    public PlayerTuto player;
 
 	// Use this for initialization
 	void Start () 

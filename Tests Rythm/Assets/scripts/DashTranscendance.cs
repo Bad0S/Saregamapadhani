@@ -6,7 +6,7 @@ public class DashTranscendance : MonoBehaviour {
 	public List<Transform> enemyList;
 	private Vector2 selection;
 	private Vector2 temp;
-	public Transform self;
+	private Transform self;
 
 	void Start(){
 		self = gameObject.transform;

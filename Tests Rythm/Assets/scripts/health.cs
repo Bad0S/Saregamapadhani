@@ -62,6 +62,7 @@ public class health : MonoBehaviour {
 				{
 					
 				}
+				GetComponent <EnemyBehaviour>().playerVictimeRend.color = Color.white;
 
 				Destroy (gameObject);
 			}

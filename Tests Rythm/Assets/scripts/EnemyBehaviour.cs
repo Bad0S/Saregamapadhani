@@ -8,8 +8,8 @@ public class EnemyBehaviour : MonoBehaviour {
 	private Animator anim;
 	[SerializeField]private float speed;
 	//[SerializeField]private GameObject attackHitbox;
-	[SerializeField]private float maxDetectionRange;
-	[SerializeField]private float attackRangeMax;
+	public float maxDetectionRange;
+	public float attackRangeMax;
 	private ContactFilter2D cFilter; 
 	private Collider2D[] resultings = new Collider2D[1];
 
@@ -20,13 +20,16 @@ public class EnemyBehaviour : MonoBehaviour {
 	public bool isFighting = false ;
 	[SerializeField]private int health;
 
+	//combat
+	public float dashMultiplicator = 1;
+
 	//arrêt du saut et saut
 	bool isJumping;
 	public float vitesseBond =1;
 	public float timerWaitRepousse=0;
 
 	//Idle
-	bool idleCanMove;
+	public bool idleCanMove;
 	public bool idling;
 
 	int damage =1;
@@ -47,11 +50,11 @@ public class EnemyBehaviour : MonoBehaviour {
 	//ATTENTION IL VA ATTAQUER
 	private Shader shaderDeCouleur;
 	private Shader shaderDeBase;
-	private Color couleurDeBase;
+	public Color couleurDeBase;
 	private Color couleurRougeShader;
 	private Color couleurBlancheShader;
 	public float opacityShader=0f;
-	private SpriteRenderer playerVictimeRend;
+	public SpriteRenderer playerVictimeRend;
 	private Rigidbody2D playerRB;
 
 	public bool aEteRepousse;
@@ -66,7 +69,7 @@ public class EnemyBehaviour : MonoBehaviour {
     void Start ()
     {
 		rythmeRange = Random.Range (1, rythmeRangeMax +1);
-		print (rythmeRange); 
+		//print (rythmeRange); 
 		rythmeScript = target.GetComponent <Rythme> ();
 		anim = GetComponent<Animator> ();
 		rb2D = GetComponent<Rigidbody2D> ();
@@ -197,12 +200,12 @@ public class EnemyBehaviour : MonoBehaviour {
 
 	void WhiteSprite() {
 		enemyRenderer.material.shader = shaderDeCouleur;
-		enemyRenderer.color = Color.white;
+		enemyRenderer.color = new Color(1f,0.9f,0.9f);
 	}
 
 	void RedSprite() {
 		enemyRenderer.material.shader = shaderDeCouleur;
-		enemyRenderer.color = Color.red;
+		enemyRenderer.color = new Color(0.95f,0,0);
 
 	}
 
@@ -213,7 +216,7 @@ public class EnemyBehaviour : MonoBehaviour {
 
 	IEnumerator FightSequence()
 	{
-		yield return new WaitForSeconds (0.20f);
+		yield return new WaitForSeconds (0.35f);
 		WhiteSprite ();
 		isFighting = true;
 		yield return new WaitForSeconds (0.16f);
@@ -280,7 +283,7 @@ public class EnemyBehaviour : MonoBehaviour {
 			anim.SetBool ("IsAttacking", false);
 			GetComponent<BoxCollider2D> ().isTrigger = false;
 			rb2D.velocity = Vector2.zero;
-			rb2D.AddForce (new Vector2(-targetVector.x,-targetVector.y).normalized*60,ForceMode2D.Impulse);
+			rb2D.AddForce (new Vector2(-targetVector.x,-targetVector.y).normalized*60*dashMultiplicator,ForceMode2D.Impulse);
 		}
 	}
 
@@ -331,7 +334,7 @@ public class EnemyBehaviour : MonoBehaviour {
 
 		playerRB.velocity = Vector2.zero;
 		playerRB.AddForce (new Vector2(targetVector.x,targetVector.y).normalized*18f,ForceMode2D.Impulse);
-		yield return new WaitForSeconds(0.12f);
+		yield return new WaitForSeconds(0.10f);
 		playerVictimeRend.material.shader = shaderDeBase;
 		playerVictimeRend.color = couleurDeBase;
 		yield return new WaitForSeconds(0.07f);

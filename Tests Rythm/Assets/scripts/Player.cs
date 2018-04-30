@@ -4,7 +4,7 @@ using UnityEngine;
 //using UnityEditor;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour 
+public class Player: MonoBehaviour 
 {
 	//Sound
 	public AudioSource audioSource;
@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
 	//Rythm
 	public bool transcendance = false;
 
+
     // Use this for initialization
     void Start () 
 	{
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour
 
 	void Move()
 	{
-		if (canMove == true) 
+		if (canMove == true  ) 
 		{
 			if (Input.GetAxisRaw ("Horizontal") != 0 || Input.GetAxisRaw ("Vertical") != 0) 
 			{
@@ -103,7 +104,7 @@ public class Player : MonoBehaviour
 			attaqueRepousse.transform.localPosition = déplacement;
 			attaqueRepousse.transform.localRotation = Quaternion.Euler (0, 0, (Mathf.Atan2 (Input.GetAxisRaw ("Horizontal"), (Input.GetAxisRaw ("Vertical"))) * -Mathf.Rad2Deg));
 		}
-        if (canAttack == true)
+		if (canAttack == true )
         {
 			if (Input.GetButton ("Fire1")) 
 			{
